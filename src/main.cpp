@@ -9,6 +9,7 @@
 #include "services/project_service.h"
 #include "services/photo_service.h"
 #include "services/project_role_service.h"
+#include "utils/database_connection.h"
 
 using namespace Pistache;
 
@@ -27,6 +28,8 @@ int main(int argc, char* argv[]) {
     server.init(opts);
 
     Router router;
+
+    auto db_conn = db::open();
 
     UserRepository userRepository;
 

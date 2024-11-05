@@ -2,11 +2,12 @@
 #define USER_REPOSITORY_H
 
 #include "../models/user.h"
+#include "utils/database_connection.h"
 #include "base.h"
 
 class UserRepository : public BaseRepository {
 public:
-    UserRepository(std::shared_ptr<sqlite3> dbConnection);
+    UserRepository(db::db_conn_t db_conn);
     ~UserRepository();
 
     bool saveUser(const User& user);

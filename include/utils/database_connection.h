@@ -5,12 +5,23 @@
 #include <iostream>
 #include <memory>
 
+namespace db {
+
+using db_conn_t = std::shared_ptr<sqlite3>;
+
+db_conn_t open();
+db_conn_t open(std::string db_path);
+
+}
+
+
+
+
 class DatabaseConnectionSingleton {
 public:
     static DatabaseConnectionSingleton& getInstance();
 
-    std::shared_ptr<sqlite3> getDatabaseConnection();
-
+    std::shared_ptr<sqlite3> getConnection();
 private:
     DatabaseConnectionSingleton();
     ~DatabaseConnectionSingleton();

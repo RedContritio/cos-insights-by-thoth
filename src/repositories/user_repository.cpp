@@ -1,13 +1,17 @@
 #include <sqlite3.h>
 #include "repositories/user_repository.h"
 
-UserRepository::UserRepository(std::shared_ptr<sqlite3> dbConnection) : BaseRepository(dbConnection) {}
+using db::db_conn_t;
+using std::shared_ptr;
+using std::string;
+
+UserRepository::UserRepository(db_conn_t conn) : BaseRepository(conn) {}
 
 UserRepository::~UserRepository() {}
 
 bool UserRepository::saveUser(const User& user) {
     sqlite3_stmt* stmt;
-    std::string sql = "INSERT INTO users (username, password) VALUES (?,?)";
+    string sql = "INSERT INTO users (username, password) VALUES (?,?)";
     int rc = sqlite3_prepare_v2(db.get(), sql.c_str(), -1, &stmt, nullptr);
     if (rc!= SQLITE_OK) {
         return false;
@@ -19,10 +23,10 @@ bool UserRepository::saveUser(const User& user) {
     return rc == SQLITE_DONE;
 }
 
-User UserRepository::getUserByUsername(const std::string& username) {
+User UserRepository::getUserByUsername(const string& username) {
     sqlite3_stmt* stmt;
     User user;
-    std::string sql = "SELECT id, username, password FROM users WHERE username =?";
+    string sql = "SELECT id, username, password FROM users WHERE username =?";
     int rc = sqlite3_prepare_v2(db.get(), sql.c_str(), -1, &stmt, nullptr);
     if (rc!= SQLITE_OK) {
         return user;
@@ -41,7 +45,7 @@ User UserRepository::getUserByUsername(const std::string& username) {
 User UserRepository::getUserById(int userId) {
     sqlite3_stmt* stmt;
     User user;
-    std::string sql = "SELECT id, username, password FROM users WHERE id =?";
+    string sql = "SELECT id, username, password FROM users WHERE id =?";
     int rc = sqlite3_prepare_v2(db.get(), sql.c_str(), -1, &stmt, nullptr);
     if (rc!= SQLITE_OK) {
         return user;

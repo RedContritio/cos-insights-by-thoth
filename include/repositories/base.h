@@ -10,6 +10,8 @@ struct sqlite3;
 class BaseRepository {
 protected:
     std::shared_ptr<sqlite3> db;
+
+    int executeRawSQL(const std::string& sql);
 public:
     BaseRepository(std::shared_ptr<sqlite3> dbConnection);
     virtual ~BaseRepository();

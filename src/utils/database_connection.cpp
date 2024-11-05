@@ -1,7 +1,12 @@
 #include <filesystem>
 #include "utils/database_connection.h"
 
-DatabaseConnectionSingleton::DatabaseConnectionSingleton() {
+using std::shared_ptr;
+using std::string;
+
+namespace db {
+
+db_conn_t open() {
     const char* baseDirEnv = std::getenv("CIT_DATABASE_BASEDIR");
     std::string dbPath;
     if (baseDirEnv) {
@@ -12,25 +17,23 @@ DatabaseConnectionSingleton::DatabaseConnectionSingleton() {
         std::filesystem::path parentDir = exePath.parent_path();
         dbPath = parentDir.string() + "/cit_data.db";
     }
+    
+    return open(dbPath);
+}
 
+
+db_conn_t open(string db_path) {
+    db_conn_t conn;
     sqlite3* rawDb;
-    int rc = sqlite3_open(dbPath.c_str(), &rawDb);
+    int rc = sqlite3_open(db_path.c_str(), &rawDb);
     if (rc) {
         std::cerr << "Can't open database: " << sqlite3_errmsg(rawDb) << std::endl;
-        db.reset();
+        conn.reset();
     } else {
         std::cout << "Opened database successfully" << std::endl;
-        db = std::shared_ptr<sqlite3>(rawDb, sqlite3_close);
+        conn = std::shared_ptr<sqlite3>(rawDb, sqlite3_close);
     }
+    return conn;
 }
 
-DatabaseConnectionSingleton::~DatabaseConnectionSingleton() {}
-
-DatabaseConnectionSingleton& DatabaseConnectionSingleton::getInstance() {
-    static DatabaseConnectionSingleton instance;
-    return instance;
-}
-
-std::shared_ptr<sqlite3> DatabaseConnectionSingleton::getDatabaseConnection() {
-    return db;
 }
