@@ -11,6 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(EXTERNAL_PATH ${CMAKE_BINARY_DIR}/external)
 add_subdirectory(external/jwt-cpp)
+add_subdirectory(external/nlohmann_json)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
