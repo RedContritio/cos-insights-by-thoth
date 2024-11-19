@@ -11,6 +11,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(GITHUB_BASEURL "https://ghp.ci/https://github.com")
 
+# third-party libraries
+
 set(EXTERNAL_PATH ${PROJECT_SOURCE_DIR}/external)
 add_subdirectory(${EXTERNAL_PATH}/nlohmann_json)
 add_subdirectory(${EXTERNAL_PATH}/jwt-cpp)
@@ -18,10 +20,6 @@ add_subdirectory(${EXTERNAL_PATH}/jwt-cpp)
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${NLOHMANN_JSON_INCLUDE_DIR}
                     ${JWTCPP_INCLUDE_DIR})
-
-include(FetchContent)
-
-# third-party libraries
 
 ## Pistache
 find_package(PkgConfig)
@@ -32,20 +30,14 @@ find_package(OpenCV REQUIRED)
 # SQLite
 find_package(SQLite3 REQUIRED)
 
-# 添加可执行文件的源文件
-file(GLOB CONTROLLERS_SRC_FILES "src/controllers/*.cpp")
-file(GLOB MODELS_SRC_FILES "src/models/*.cpp")
-file(GLOB REPOSITORY_SRC_FILES "src/repositories/*.cpp")
-file(GLOB SERVICES_SRC_FILES "src/services/*.cpp")
-file(GLOB UTILS_SRC_FILES "src/utils/*.cpp")
+# Src files
+file(GLOB_RECURSE PROJECT_CPP_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
-set(SOURCE_FILES ${CONTROLLERS_SRC_FILES} ${MODELS_SRC_FILES} ${REPOSITORY_SRC_FILES} ${SERVICES_SRC_FILES} ${UTILS_SRC_FILES})
-
-add_executable(${MAIN_TARGET} src/main.cpp ${SOURCE_FILES})
+add_executable(${MAIN_TARGET} ${PROJECT_CPP_FILES})
 
 add_dependencies(${MAIN_TARGET} jwt-cpp)
 
-# 链接所需的库
+# Linking
 target_link_libraries(${MAIN_TARGET} PRIVATE PkgConfig::Pistache jwt-cpp::jwt-cpp
                         ${OpenCV_LIBS}
                         ${SQLite3_LIBRARIES})
