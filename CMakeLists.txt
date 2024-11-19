@@ -9,11 +9,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(EXTERNAL_PATH ${CMAKE_BINARY_DIR}/external)
-add_subdirectory(external/jwt-cpp)
-add_subdirectory(external/nlohmann_json)
+set(GITHUB_BASEURL "https://ghp.ci/https://github.com")
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+set(EXTERNAL_PATH ${PROJECT_SOURCE_DIR}/external)
+add_subdirectory(${EXTERNAL_PATH}/nlohmann_json)
+add_subdirectory(${EXTERNAL_PATH}/jwt-cpp)
+
+include_directories(${PROJECT_SOURCE_DIR}/include
+                    ${NLOHMANN_JSON_INCLUDE_DIR}
+                    ${JWTCPP_INCLUDE_DIR})
 
 include(FetchContent)
 

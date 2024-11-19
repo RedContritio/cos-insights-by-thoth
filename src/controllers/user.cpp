@@ -5,6 +5,8 @@
 #include <pistache/http.h>
 #include <pistache/router.h>
 
+#include "nlohmann/json.hpp"
+
 #include <iostream>
 
 
